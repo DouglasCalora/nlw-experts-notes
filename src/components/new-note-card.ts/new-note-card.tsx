@@ -60,7 +60,7 @@ function DefaultButton (props: NewNoteCardDefaultButtonProps) {
 
 let speechRecognition: SpeechRecognition | null = null
 
-export default function NewNoteCard (props: NewNoteCardProps) {
+export function NewNoteCard (props: NewNoteCardProps) {
   const [content, setContent] = useState('')
   const [isRecording, setIsRecording] = useState(false)
   const [shouldShowOnboarding, setShouldShowOnboarding] = useState(true)
