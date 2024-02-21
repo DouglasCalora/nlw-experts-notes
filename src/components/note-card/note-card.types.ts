@@ -10,6 +10,7 @@ export interface NoteCardProps {
 }
 
 export interface CardTriggerProps {
+  onClick: () => void
   note: Pick<Note, 'content' | 'date'>
 }
 

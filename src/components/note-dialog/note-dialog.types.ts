@@ -8,4 +8,6 @@ export interface NoteDialogProps {
   dialogProps?: DialogProps
   footerNode: ReactNode
   title: string
+  open: boolean
+  onClose?: () => void
 }
