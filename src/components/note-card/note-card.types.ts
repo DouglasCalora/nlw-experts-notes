@@ -9,15 +9,15 @@ export interface NoteCardProps {
   onNoteDeleted: (id: string) => void
 }
 
-export interface CardTriggerProps {
+export interface NoteCardTriggerProps {
   onClick: () => void
   note: Pick<Note, 'content' | 'date'>
 }
 
-export interface ContentProps {
+export interface NoteContentProps {
   note: Pick<Note, 'content'>
 }
 
-export interface FooterProps extends Pick<NoteCardProps, 'onNoteDeleted'> {
+export interface NoteFooterProps extends Pick<NoteCardProps, 'onNoteDeleted'> {
   note: Pick<Note, 'id'>
 }

@@ -1,6 +1,7 @@
+import type { NoteDialogProps } from './note-dialog.types'
+
 import * as Dialog from '@radix-ui/react-dialog'
 import { X } from 'lucide-react'
-import { NoteDialogProps } from './note-dialog.types'
 
 export function NoteDialog (props: NoteDialogProps) {
   return (
@@ -9,7 +10,7 @@ export function NoteDialog (props: NoteDialogProps) {
       open={props.open}
     >
       <Dialog.Portal>
-        <Dialog.Overlay className="inset-0 fixed bg-black/50" />
+        <Dialog.Overlay className="inset-0 fixed bg-black/50" onClick={props.onClose} />
 
         <Dialog.Content className="fixed z-10 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-[640px] w-full bg-slate-700 h-[60vh] rounded-md flex flex-col outline-none overflow-hidden">
           <Dialog.Close

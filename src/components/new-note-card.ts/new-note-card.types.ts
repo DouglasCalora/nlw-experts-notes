@@ -4,20 +4,16 @@ export interface NewNoteCardProps {
   onNoteCreated: (content: string) => void
 }
 
-export interface NewNoteCardContentProps {
-  handleStartRecording: () => void
-  handleStartEditor: () => void
-}
-
-export interface NewNoteCardTextareaProps {
-  handleContentChange: (event: ChangeEvent<HTMLTextAreaElement>) => void
+export interface NewNoteContentDialogProps {
   content: string
+  shouldShowOnboarding: boolean
+  handleContentChange: (event: ChangeEvent<HTMLTextAreaElement>) => void
+  handleStartEditor: () => void
+  handleStartRecording: () => void
 }
 
-export interface NewNoteCardRecordingButtonProps {
-  stopRecording: () => void
-}
-
-export interface NewNoteCardDefaultButtonProps {
+export interface NewNoteFooterDialogProps {
+  isRecording: boolean
   saveNote: () => void
+  stopRecording: () => void
 }
