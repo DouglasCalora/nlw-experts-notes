@@ -1,5 +1,7 @@
 import { NewNoteCard } from '@components/new-note-card.ts'
-import { NoteCard, Note } from '@components/note-card'
+import { NoteCard } from '@components/note-card'
+
+import type { Note } from '@components/note-card'
 
 import logo from './assets/logo.svg'
 
@@ -51,21 +53,21 @@ export default function App () {
   }
 
   return (
-    <div className="mx-auto max-w-6xl my-12 space-y-6 px-5">
-      <img src={logo} alt="Logo nlw" />
+    <div className='mx-auto max-w-6xl my-12 space-y-6 px-5'>
+      <img src={logo} alt='Logo nlw' />
 
-      <form className="w-full">
+      <form className='w-full'>
         <input
-          type="text"
-          placeholder="Busque em suas notas..."
-          className="w-full bg-transparent text-3xl font-semibold tracking-tighter placeholder:text-slate-500 outline-none"
+          type='text'
+          placeholder='Busque em suas notas...'
+          className='w-full bg-transparent text-3xl font-semibold tracking-tighter placeholder:text-slate-500 outline-none'
           onChange={onTypeSearch}
         />
       </form>
 
-      <div className="h-px bg-slate-700" />
+      <div className='h-px bg-slate-700' />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 auto-rows-[250px] gap-6">
+      <div className='grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 auto-rows-[250px] gap-6'>
         <NewNoteCard onNoteCreated={onNoteCreated} />
 
         {filteredNotes.map(note => {

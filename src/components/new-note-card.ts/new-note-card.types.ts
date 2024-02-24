@@ -13,7 +13,11 @@ export interface NewNoteContentDialogProps {
 }
 
 export interface NewNoteFooterDialogProps {
+  content: string
   isRecording: boolean
   saveNote: () => void
   stopRecording: () => void
 }
+
+export type NewNoteFooterDialogRecordingProps = Pick<NewNoteFooterDialogProps, 'stopRecording'>
+export type NewNoteFooterDialogSaveProps = Pick<NewNoteFooterDialogProps, 'content' | 'saveNote'>

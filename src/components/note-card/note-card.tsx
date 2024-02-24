@@ -1,7 +1,11 @@
 import { NoteDialog } from '@components/note-dialog'
 import { BaseCard } from '@components/base-card'
 
-import type { NoteContentProps, NoteFooterProps, NoteCardProps } from './note-card.types'
+import type {
+  NoteContentProps,
+  NoteFooterProps,
+  NoteCardProps
+} from './note-card.types'
 
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'

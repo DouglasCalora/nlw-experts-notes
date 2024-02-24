@@ -4,65 +4,80 @@ import { NoteDialog } from '@components/note-dialog'
 import type {
   NewNoteCardProps,
   NewNoteContentDialogProps,
-  NewNoteFooterDialogProps
+  NewNoteFooterDialogProps,
+  NewNoteFooterDialogRecordingProps,
+  NewNoteFooterDialogSaveProps
 } from './new-note-card.types'
 
+import { clsx } from 'clsx'
+import { toast } from 'sonner'
 import { useState, ChangeEvent } from 'react'
 
-import { toast } from 'sonner'
-
+// content
 function ContentDialog (props: NewNoteContentDialogProps) {
-  if (props.shouldShowOnboarding) {
-    return (
-      <p className="text-slate-400 left-6 font-medium">
-        Comece <button type="button" className="text-lime-400" onClick={props.handleStartRecording}>gravando uma nota</button> em áudio ou se preferir <button type="button" className="text-lime-400" onClick={props.handleStartEditor}>utilize apenas texto</button>.
-      </p>
-    )
-  }
-
   return (
-    <textarea
-      className="text-sm leading-6 text-slate-400 bg-transparent resize-none flex-1 outline-none"
-      autoFocus
-      onChange={props.handleContentChange}
-      value={props.content}
-    />
+    props.shouldShowOnboarding
+      ? <p className='text-slate-400 left-6 font-medium'>
+        Comece <button type='button' className='text-lime-400' onClick={props.handleStartRecording}>gravando uma nota</button> em áudio ou se preferir <button type='button' className='text-lime-400' onClick={props.handleStartEditor}>utilize apenas texto</button>.
+      </p>
+      : <textarea
+        className='text-sm leading-6 text-slate-400 bg-transparent resize-none flex-1 outline-none'
+        autoFocus
+        onChange={props.handleContentChange}
+        value={props.content}
+      />
   )
 }
 
-function FooterDialog (props: NewNoteFooterDialogProps) {
-  if (props.isRecording) {
-    return (
-      <button
-        className="bg-slate-900 outline-none py-4 text-sm font-medium group text-slate-300 hover:text-slate-100 flex items-center justify-center gap-2"
-        type="button"
-        onClick={props.stopRecording}
-      >
-        <span className="size-3 bg-red-500 rounded-full animate-pulse" />
-        Gravando! (clique p/ interromper)
-      </button>
-    )
-  }
+// footer
+function FooterDialogRecording (props: NewNoteFooterDialogRecordingProps) {
+  return (
+    <button
+      className='bg-slate-900 outline-none py-4 text-sm font-medium group text-slate-300 hover:text-slate-100 flex items-center justify-center gap-2'
+      type='button'
+      onClick={props.stopRecording}
+    >
+      <span className='size-3 bg-red-500 rounded-full animate-pulse' />
+      Gravando! (clique p/ interromper)
+    </button>
+  )
+}
+
+function FooterDialogSave (props: NewNoteFooterDialogSaveProps) {
+  const staticClasses = 'bg-lime-400 outline-none py-4 text-sm font-medium group text-lime-950'
+  const isDisabled = !props.content
+
+  const classes = clsx(
+    staticClasses,
+    isDisabled ? 'cursor-not-allowed bg-slate-200' : 'hover:bg-lime-500'
+  )
 
   return (
     <button
-      className="bg-lime-400 outline-none py-4 text-sm font-medium group text-lime-950 hover:bg-lime-500"
-      type="button"
+      className={classes}
+      type='button'
       onClick={props.saveNote}
-      disabled
+      disabled={isDisabled}
     >
       Salvar nota
     </button>
   )
 }
 
+function FooterDialog (props: NewNoteFooterDialogProps) {
+  return props.isRecording
+    ? <FooterDialogRecording {...props} />
+    : <FooterDialogSave {...props} />
+}
+
+// speech
 let speechRecognition: SpeechRecognition | null = null
 
 export function NewNoteCard (props: NewNoteCardProps) {
   const [content, setContent] = useState('')
+  const [isDialogOpened, setIsDialogOpened] = useState(false)
   const [isRecording, setIsRecording] = useState(false)
   const [shouldShowOnboarding, setShouldShowOnboarding] = useState(true)
-  const [isOpened, setIsOpened] = useState(false)
 
   const contentDialogProps: NewNoteContentDialogProps = {
     content,
@@ -73,13 +88,21 @@ export function NewNoteCard (props: NewNoteCardProps) {
   }
 
   const footerDialogProps: NewNoteFooterDialogProps = {
+    content,
     isRecording,
     saveNote,
     stopRecording
   }
 
   function toggleDialog () {
-    setIsOpened(!isOpened)
+    setIsDialogOpened(!isDialogOpened)
+  }
+
+  function reset () {
+    toggleDialog()
+    setShouldShowOnboarding(true)
+    stopRecording()
+    setContent('')
   }
 
   function handleStartEditor () {
@@ -110,6 +133,7 @@ export function NewNoteCard (props: NewNoteCardProps) {
 
     speechRecognition.onresult = event => {
       const transcriptionList = Array.from(event.results)
+
       const transcription = transcriptionList.reduce((text, result) => {
         return text.concat(result[0].transcript)
       }, '')
@@ -117,8 +141,8 @@ export function NewNoteCard (props: NewNoteCardProps) {
       setContent(transcription)
     }
 
-    speechRecognition.onerror = event => {
-      console.log('TCL: handleStartRecording -> event', event)
+    speechRecognition.onerror = () => {
+      toast.error('Erro ao inicializar speaker.')
     }
 
     speechRecognition.start()
@@ -127,7 +151,7 @@ export function NewNoteCard (props: NewNoteCardProps) {
   function stopRecording () {
     setIsRecording(false)
 
-    speechRecognition?.stop()
+    speechRecognition?.abort()
   }
 
   function handleContentChange (event: ChangeEvent<HTMLTextAreaElement>) {
@@ -144,42 +168,6 @@ export function NewNoteCard (props: NewNoteCardProps) {
   }
 
   return (
-  // <Dialog.Root>
-  //   <Dialog.Trigger className="rounded-md text-left flex bg-slate-700 p-5 outline-none text-sm space-y-3 hover:ring-2 hover:ring-slate-700 focus-visible:ring-2 focus-visible:ring-lime-400">
-  //     <div>
-  //       <span className="text-slate-200 font-medium leading-5" >Adicionar nota</span>
-
-  //       <p className="text-slate-400 left-6">Grave uma nota em áudio que será convertida para texto automaticamente.</p>
-  //     </div>
-  //   </Dialog.Trigger>
-
-  //   <Dialog.Portal>
-  //     <Dialog.Overlay className="inset-0 fixed bg-black/50" />
-
-  //     <Dialog.Content className="fixed z-10 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-[640px] w-full bg-slate-700 h-[60vh] rounded-md flex flex-col outline-none overflow-hidden">
-  //       <Dialog.Close className="p-1.5 absolute bg-slate-800 right-0 group">
-  //         <X className=" text-slate-500 size-5 group-hover:text-slate-100" />
-  //       </Dialog.Close>
-
-  //       <form className="flex flex-col flex-1">
-  //         <div className="flex flex-1 flex-col gap-3 p-5">
-  //           <span className="text-slate-300 font-medium leading-5">
-  //             Adicionar uma nota
-  //           </span>
-
-  //           {
-  //             shouldShowOnboarding
-  //               ? <Content handleStartEditor={handleStartEditor} handleStartRecording={handleStartRecording} />
-  //               : <Textarea content={content} handleContentChange={event => handleContentChange(event)} />
-  //           }
-  //         </div>
-
-  //         {isRecording ? <RecordingButton stopRecording={stopRecording} /> : <DefaultButton saveNote={saveNote} />}
-  //       </form>
-  //     </Dialog.Content>
-  //   </Dialog.Portal>
-  // </Dialog.Root>
-
     <>
       <BaseCard
         title='Adicionar uma nota'
@@ -191,9 +179,9 @@ export function NewNoteCard (props: NewNoteCardProps) {
       <NoteDialog
         contentNode={<ContentDialog {...contentDialogProps} />}
         footerNode={<FooterDialog {...footerDialogProps} />}
-        open={isOpened}
+        open={isDialogOpened}
         title='Adicionar uma nota'
-        onClose={toggleDialog}
+        onClose={reset}
       />
     </>
   )
