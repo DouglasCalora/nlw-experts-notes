@@ -1,7 +1,9 @@
 import { NewNoteCard } from '@components/new-note-card.ts'
 import { NoteCard } from '@components/note-card'
 
-import type { Note } from '@components/note-card'
+import { useNotes } from '@hooks/use-notes.hook'
+
+// import type { Note } from '@components/note-card'
 
 import logo from './assets/logo.svg'
 
@@ -9,42 +11,11 @@ import { ChangeEvent, useState } from 'react'
 
 export default function App () {
   const [search, setSearch] = useState('')
-
-  const [notes, setNotes] = useState<Note[]>(() => {
-    const notesFromStorage = localStorage.getItem('notes')
-
-    return notesFromStorage ? JSON.parse(notesFromStorage) : []
-  })
+  const { notes, add, remove } = useNotes()
 
   const filteredNotes = search
     ? notes.filter(note => note.content.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
     : notes
-
-  function onNoteCreated (content: string) {
-    const newNote: Note = {
-      content,
-      date: new Date(),
-      id: crypto.randomUUID()
-    }
-
-    const notesList = [newNote, ...notes]
-
-    setNotes(notesList)
-
-    localStorage.setItem('notes', JSON.stringify(notesList))
-  }
-
-  function onNoteDeleted (id: string) {
-    const notesList: Note[] = [...notes]
-
-    const index = notesList.findIndex(note => note.id === id)
-
-    if (~index) notesList.splice(index, 1)
-
-    setNotes(notesList)
-
-    localStorage.setItem('notes', JSON.stringify(notesList))
-  }
 
   function onTypeSearch (event: ChangeEvent<HTMLInputElement>) {
     const query = event.target.value
@@ -68,10 +39,16 @@ export default function App () {
       <div className='h-px bg-slate-700' />
 
       <div className='grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 auto-rows-[250px] gap-6'>
-        <NewNoteCard onNoteCreated={onNoteCreated} />
+        <NewNoteCard onNoteCreated={add} />
 
         {filteredNotes.map(note => {
-          return <NoteCard key={note.id} note={note} onNoteDeleted={() => onNoteDeleted(note.id)} />
+          return (
+            <NoteCard
+              key={note.id}
+              note={note}
+              onNoteDeleted={() => remove(note.id)}
+            />
+          )
         })}
       </div>
     </div>

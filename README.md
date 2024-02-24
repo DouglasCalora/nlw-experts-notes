@@ -4,6 +4,8 @@
 Este projeto foi desenvolvido com base no evento NLW, porém foi aplicado diversas mudanças com o objetivo de melhorar o código e estudos, tais quais:
 
 - Configuração do ESLINT;
+- Criação de custom aliases;
+- Criação de custom hook para trabalhar com os `notes`;
 - Aplicado diversas componentizações adicionais para garantir padronizações, como:
   - BaseCard:
     componente base para os cards, tanto card de criação de nota quando card de nota.
