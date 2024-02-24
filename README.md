@@ -1,6 +1,6 @@
 # Next Level Week / Expert Notes
 
-## Isto não é apenas uma cópia de código de um curso!
+## Isto não é apenas uma cópia de código de curso!
 Este projeto foi desenvolvido com base no evento NLW, porém foi aplicado diversas mudanças com o objetivo de melhorar o código e estudos, tais quais:
 
 - Configuração do ESLINT;
@@ -14,3 +14,18 @@ Este projeto foi desenvolvido com base no evento NLW, porém foi aplicado divers
 - Aplicações de conceitos de clean code:
   - Separação de tipagem em arquivos separados para não poluir o código;
   - criação de micro componentes para não poluir JSX;
+
+## Como rodar
+Com o node estando na versão `20`, rode os comandos na raiz do projeto:
+
+```bash
+npm i
+```
+
+Após isto é só rodar:
+
+```bash
+npm run dev
+```
+
+Pronto, a aplicação já esta rodando.
