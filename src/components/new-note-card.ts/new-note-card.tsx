@@ -11,14 +11,24 @@ import type {
 
 import { clsx } from 'clsx'
 import { toast } from 'sonner'
-import { useState, ChangeEvent } from 'react'
+
+import { useState } from 'react'
+import type { ChangeEvent, ButtonHTMLAttributes } from 'react'
 
 // content
 function ContentDialog (props: NewNoteContentDialogProps) {
+  const buttonProps: ButtonHTMLAttributes<HTMLButtonElement> = {
+    type: 'button',
+    className: 'text-lime-400'
+  }
+
+  const startButtonProps = { ...buttonProps, onClick: props.handleStartRecording }
+  const textButtonProps = { ...buttonProps, onClick: props.handleStartEditor }
+
   return (
     props.shouldShowOnboarding
       ? <p className='text-slate-400 left-6 font-medium'>
-        Comece <button type='button' className='text-lime-400' onClick={props.handleStartRecording}>gravando uma nota</button> em áudio ou se preferir <button type='button' className='text-lime-400' onClick={props.handleStartEditor}>utilize apenas texto</button>.
+        Comece <button {...startButtonProps}>gravando uma nota</button> em áudio ou se preferir <button {...textButtonProps}>utilize apenas texto</button>.
       </p>
       : <textarea
         className='text-sm leading-6 text-slate-400 bg-transparent resize-none flex-1 outline-none'
@@ -170,8 +180,8 @@ export function NewNoteCard (props: NewNoteCardProps) {
   return (
     <>
       <BaseCard
-        title='Adicionar uma nota'
         content='Grave uma nota em áudio que será convertida para texto automaticamente.'
+        title='Adicionar uma nota'
         useNew={true}
         onClick={toggleDialog}
       />

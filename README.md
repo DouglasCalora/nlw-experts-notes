@@ -5,9 +5,9 @@ Este projeto foi desenvolvido com base no evento NLW, porém foi aplicado divers
 
 - Configuração do ESLINT;
 - Aplicado diversas componentizações adicionais para garantir padronizações, como:
-  - **BaseCard**:
+  - BaseCard:
     componente base para os cards, tanto card de criação de nota quando card de nota.
-  - **NoteDialog**:
+  - NoteDialog:
     componente wrapper do Dialog do radix, uma vez que no curso foi usado o Dialog do radix tanto no NewNoteCard quanto no NoteCard.
 - Aplicações de conceitos de clean code:
   - Separação de tipagem em arquivos separados para não poluir o código;
